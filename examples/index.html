@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MSABrowser|NIPBL Example</title>
+    <link type="text/css" rel="stylesheet" href="../css/style.css" media="screen" />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="../javascript/msabrowser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src='https://cdn.plot.ly/plotly-2.26.0.min.js'></script>
+</head>
+
+
+<body>
+
+    <h1>Simulated FASTA with long sequences</h1>
+    <article>
+        In this case, we created a FASTA file with 75 sequences each have more than 75000 amino acids. This is to show the power of our visualization tool. 
+    </article>
+    <input type="file" id="file-selector" accept=".txt">
+        <button id="annotationpop">Annotations</button>
+        <div id="myPopup" class="popup">
+            <div class="popup-content">
+                <p>Select Annotations Here:</p>
+                  <div class="dropdown-item">
+                    <input type="checkbox" id="labelcheck">
+                    <label for="labelcheck">Label Annotation</label>
+                    <input type="file" id="labelfile" accept=".txt">
+                  </div>
+                  <div class="dropdown-item">
+                    <input type="checkbox" id="linecheck">
+                    <label for="linecheck">Line Annotation</label>
+                    <input type="file" id="linefile" accept=".txt">
+                  </div>
+                </div>
+            </div>
+        </div>
+
+            
+
+      <label for="color-select">Color Scheme:</label>
+        <select name="colors" id="color-select">
+        <option value="hydrophobicity">Hydrophobicity</option>
+        <option value="buried">Buried</option>
+        <option value="cinema">Cinema</option>
+        <option value="clustal">Clustal</option>
+        <option value="clustal2">Clustal 2</option>
+        <option value="helix">Helix</option>
+        <option value="lesk">Lesk</option>
+        <option value="mae">Mae</option>
+        <option value="strand">Strand</option>
+        <option value="taylor">Taylor</option>
+        <option value="turn">Turn</option>
+        <option value="zappo">Zappo</option>
+        <option value="nucleotide">Nucleotide</option>
+        </select>
+      <button type="button" onclick=buildBrowser()>Render Sequence</button>
+
+    
+    <!-- MSABrowser Demo -->
+    <section id="MSABrowserDemo"></section>
+    <!-- end of MSABrowser Demo -->
+
+
+<script>
+        var viewer;
+        var annotations = [];
+        var color = "";
+        var alterations = [
+            // MOUSE
+            {
+                'sequenceIndex': 2,
+                'position': 117,
+                'note': 'Alt:W|Ref:V,rs1131700854,synonymous variant',
+                'source': 'dbSNP'
+            }, {
+                'sequenceIndex': 2,
+                'position': 150,
+                'note': 'Alt:R|Ref:S,rs237678659,synonymous variant',
+                'source': 'dbSNP'
+            }, {
+                'sequenceIndex': 2,
+                'position': 199,
+                'note': 'Alt:Y|Ref:P,rs211696152,synonymous variant',
+                'source': 'dbSNP'
+            }, {
+                'sequenceIndex': 2,
+                'position': 259,
+                'note': 'Alt:R|Ref:G,rs216297383,synonymous variant',
+                'source': 'dbSNP'
+            }, {
+                'sequenceIndex': 2,
+                'position': 287,
+                'note': 'Alt:Y|Ref:T,rs253215325,synonymous variant',
+                'source': 'dbSNP'
+            }, {
+                'sequenceIndex': 2,
+                'position': 457,
+                'note': 'Alt:Y|Ref:Q,rs258399537,synonymous variant',
+                'source': 'dbSNP'
+            }
+        ];
+
+</script>
+
+    <script>
+        console.log("hello");
+        var labelfile;
+        var linefile;
+        let textarea = document.querySelector('textarea')
+        let fileinput = document.getElementById('file-selector')
+        let labelinput = document.getElementById('labelfile')
+        let lineinput = document.getElementById('linefile')
+
+
+        function buildBrowser(){
+            annotations = [];
+            color = "";
+            changeColor();
+            addAnnotation();
+            viewer = new MSABrowser({
+                id: "MSABrowserDemo",
+                msa: MSAProcessor({
+                    fasta: fasta,
+                    hasConsensus: true
+                }),
+                annotations: annotations,
+                alterations: alterations,
+                colorSchema: color,
+            });
+            viewer.export("MSA_export.fasta");
+
+        }
+
+        fileinput.addEventListener('change', () => {
+            let files = fileinput.files;
+ 
+            if (files.length == 0) return;
+            const file1 = files[0];
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                fasta = e.target.result;
+        		//textarea.value = fasta;
+
+            };
+            reader.readAsText(file1);
+        });
+        labelinput.addEventListener('change', () => {
+            let files = labelinput.files;
+            if (files.length == 0) return;
+            const file1 = files[0];
+            let reader = new FileReader();
+            reader.onload = (e) => {
+            labelfile = JSON.parse(e.target.result);
+        		//textarea.value = fasta;
+            console.log("read");
+            //viewer.export("MSA_export.fasta");
+            };
+            reader.readAsText(file1);
+        });
+        lineinput.addEventListener('change', () => {
+            let files = labelinput.files;
+            if (files.length == 0) return;
+            const file1 = files[0];
+            let reader = new FileReader();
+            reader.onload = (e) => {
+            linefile = JSON.parse(e.target.result);
+        		//textarea.value = fasta;
+            console.log("read");
+            //viewer.export("MSA_export.fasta");
+            };
+            reader.readAsText(file1);
+        });
+
+        
+        function addAnnotation(){
+            var label = document.getElementById("labelcheck");
+            var line = document.getElementById("linecheck");
+            if (label.checked == true){
+            annotations = annotations.concat(labelfile);
+            } 
+            if (line.checked == true){
+            annotations = annotations.concat(linefile);
+            }
+        }
+
+        function changeColor(){
+            var selector = document.getElementById("color-select");
+            color = selector.value;
+        }
+
+        annotationpop.addEventListener("click", function () {
+            console.log("hello");
+            myPopup.classList.add("show");
+        });
+        
+        window.addEventListener("click", function (event) {
+            if (event.target == myPopup) {
+                myPopup.classList.remove("show");
+            }
+        });
+        /*
+        function enableCheckbox() {
+            var label = document.getElementById("labelcheck");
+            var line = document.getElementById("linecheck");            
+            if () {
+                label.disabled = false; // Enable the checkbox
+                console.log("yay");
+
+            } else {
+                label.disabled = true; // Disable the checkbox
+
+            }
+            if (linefile) {
+                line.disabled = false; // Enable the checkbox
+            } else {
+                line.disabled = true; // Disable the checkbox
+            }
+            }
+            */
+</script>
+
+</body>
+
+</html>

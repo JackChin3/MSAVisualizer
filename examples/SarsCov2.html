@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MSABrowser | SARS-CoV-2 Example</title>
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/msabrowser/msabrowser@v1.1//css/style.css" media="screen" />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/msabrowser/msabrowser@v1.1//javascript/msabrowser.js"></script>
+</head>
+
+<body>
+    <h1>COVID-19 / Virology Study | SARS-CoV-2 Example</h1>
+    <article>
+        In this example, some available SARS-CoV-2 sequences are aligned with default options of MUSCLE and their variations are added.
+        <br> For instance, you can display a particular genetic variation in any species by
+        <a href="javascript:void(0)" onclick="viewer.scrollToPosition(1,6554)"> just clicking this link</a>.
+        <br> For annotations part, GFF3 file is downloaded from <a href="https://www.ncbi.nlm.nih.gov/nuccore/MT123293" target="_blank">NCBI GenBank</a> for MT123293.
+    </article>
+
+    <!-- MSABrowser Demo -->
+    <section id="MSABrowserDemo"></section>
+    <!-- end of MSABrowser Demo -->
+
+
+    <script type="text/javascript" charset="utf-8">
+        var viewer;
+        var annotations = [{
+            source: "Genes for MT123293",
+            data: [{
+                'annotation_id': 'gene-orf1ab',
+                'annotation_name': 'orf1ab',
+                'annotation_external_link': 'https://msabrowser.github.io',
+                'annotation_start_point': 260,
+                'annotation_end_point': 21549
+            }, {
+                'annotation_id': 'gene-S',
+                'annotation_name': 'S',
+                'annotation_external_link': 'https://msabrowser.github.io',
+                'annotation_start_point': 21557,
+                'annotation_end_point': 25378
+            }, {
+                'annotation_id': 'gene-ORF3a',
+                'annotation_name': 'ORF3a',
+                'annotation_external_link': 'https://msabrowser.github.io',
+                'annotation_start_point': 25387,
+                'annotation_end_point': 26214
+            }, {
+                'annotation_id': 'gene-E',
+                'annotation_name': 'E',
+                'annotation_external_link': 'https://msabrowser.github.io',
+                'annotation_start_point': 26239,
+                'annotation_end_point': 26466
+            }, {
+                'annotation_id': 'gene-M',
+                'annotation_name': 'M',
+                'annotation_external_link': 'https://msabrowser.github.io',
+                'annotation_start_point': 26517,
+                'annotation_end_point': 27185
+            }, {
+                'annotation_id': 'gene-ORF6',
+                'annotation_name': 'ORF6',
+                'annotation_external_link': 'https://msabrowser.github.io',
+                'annotation_start_point': 27196,
+                'annotation_end_point': 27381
+            }, {
+                'annotation_id': 'gene-ORF7a',
+                'annotation_name': 'ORF7a',
+                'annotation_external_link': 'https://msabrowser.github.io',
+                'annotation_start_point': 27388,
+                'annotation_end_point': 27753
+            }, {
+                'annotation_id': 'gene-ORF8',
+                'annotation_name': 'ORF8',
+                'annotation_external_link': 'https://msabrowser.github.io',
+                'annotation_start_point': 27888,
+                'annotation_end_point': 28253
+            }, {
+                'annotation_id': 'gene-N',
+                'annotation_name': 'N',
+                'annotation_external_link': 'https://msabrowser.github.io',
+                'annotation_start_point': 28268,
+                'annotation_end_point': 29527
+            }, {
+                'annotation_id': 'gene-ORF10',
+                'annotation_name': 'ORF10',
+                'annotation_external_link': 'https://msabrowser.github.io',
+                'annotation_start_point': 29552,
+                'annotation_end_point': 29668
+            }, ]
+        }, {
+            source: "NOTES",
+            data: [{
+                'annotation_id': 'PAM + N-gene gRNA',
+                'annotation_name': 'PAM + N-gene gRNA',
+                'annotation_external_link': 'https://doi.org/10.1038/s41587-020-0513-4',
+                'annotation_start_point': 29209,
+                'annotation_end_point': 29233
+            }, {
+                'annotation_id': 'PAM + E-gene gRNA',
+                'annotation_name': 'PAM + E-gene gRNA',
+                'annotation_external_link': 'https://doi.org/10.1038/s41587-020-0513-4',
+                'annotation_start_point': 26319,
+                'annotation_end_point': 26343
+            }]
+        }, {
+            source: "NOTES2",
+            data: [{
+                'annotation_id': 'PAM + E-gene gRNA',
+                'annotation_name': 'PAM + E-gene gRNA',
+                'annotation_external_link': 'https://doi.org/10.1038/s41587-020-0513-4',
+                'annotation_start_point': 1,
+                'annotation_end_point': 29929
+            }]
+        }];
+
+        var alterations = [{
+                'sequenceIndex': 4,
+                'position': 225,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/490">Click here </a><br> REF=T 225 ALT=W VEP=coding_sequence_variant gene-orf1ab:g.225gaT>gaW',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 4,
+                'position': 2912,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/3177">Click here </a><br> REF=C 2912 ALT=Y VEP=coding_sequence_variant gene-orf1ab:g.2912cCt>cYt ',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 4,
+                'position': 8517,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/8782">Click here </a><br> REF=C 8517 ALT=Y VEP=coding_sequence_variant gene-orf1ab:g.8517agC>agY ',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 4,
+                'position': 2472,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/24034">Click here </a><br> REF=C 2472 ALT=Y VEP=coding_sequence_variant gene-S:g.2472aaC>aaY',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 4,
+                'position': 207,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/26729">Click here </a><br> REF=T 207 ALT=Y VEP=coding_sequence_variant gene-M:g.207gcT>gcY',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 4,
+                'position': 184,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/28077">Click here </a><br> REF=G 184 ALT=S VEP=coding_sequence_variant gene-ORF8:g.184Gtg>Stg',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 4,
+                'position': 251,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/28144">Click here </a><br> REF=T 251 ALT=Y VEP=coding_sequence_variant gene-ORF8:g.251tTa>tYa',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 4,
+                'position': 581,
+                'note': ' SNP 2019-nCoV/USA-IL1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/28854">Click here </a><br> REF=C 581 ALT=Y VEP=coding_sequence_variant gene-N:g.581tCa>tYa',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 5,
+                'position': 3253,
+                'note': ' SNP BetaCoV/USA/MA1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/3518">Click here </a><br> REF=G 3253 ALT=T VEP=missense_variant gene-orf1ab:c.3253Gtt>Ttt',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 5,
+                'position': 5215,
+                'note': ' SNP BetaCoV/USA/MA1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/5480">Click here </a><br> REF=G 5215 ALT=R VEP=coding_sequence_variant gene-orf1ab:c.5215Gcc>Rcc',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 5,
+                'position': 17159,
+                'note': ' SNP BetaCoV/USA/MA1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/17423">Click here </a><br> REF=A 17159 ALT=G VEP=missense_variant gene-orf1ab:c.17159tAt>tGt',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 5,
+                'position': 2472,
+                'note': ' SNP BetaCoV/USA/MA1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/24034">Click here </a><br> REF=C 2472 ALT=T VEP=synonymous_variant gene-S:c.2472aaC>aaT',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 5,
+                'position': 581,
+                'note': ' SNP BetaCoV/USA/MA1/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/28854">Click here </a><br> REF=C 581 ALT=T VEP=missense_variant gene-N:c.581tCa>tTa',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 1,
+                'position': 389,
+                'note': ' SNP SARS-CoV-2/IQTC03/human/2020/CHN VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/654">Click here </a><br> REF=G 389 ALT=A VEP=missense_variant gene-orf1ab:c.389gGa>gAa',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 1,
+                'position': 6554,
+                'note': ' SNP SARS-CoV-2/IQTC03/human/2020/CHN VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/6819">Click here </a><br> REF=G 6554 ALT=T VEP=missense_variant gene-orf1ab:c.6554aGt>aTt',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 1,
+                'position': 6731,
+                'note': ' SNP SARS-CoV-2/IQTC03/human/2020/CHN VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/6996">Click here </a><br> REF=T 6731 ALT=C VEP=missense_variant gene-orf1ab:c.6731aTc>aCc',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 1,
+                'position': 17109,
+                'note': ' SNP SARS-CoV-2/IQTC03/human/2020/CHN VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/17373">Click here </a><br> REF=C 17109 ALT=T VEP=synonymous_variant gene-orf1ab:c.17109gcC >gcT',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 1,
+                'position': 1254,
+                'note': ' SNP SARS-CoV-2/IQTC03/human/2020/CHN VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/29527">Click here </a><br> REF=G 1254 ALT=A VEP=synonymous_variant gene-N:c.1254caG>caA',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 2,
+                'position': 5519,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/5784">Click here </a><br> REF=C 5519 ALT=T VEP=missense_variant gene-orf1ab:c.5519aCt>aTt',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 2,
+                'position': 8517,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/8782">Click here </a><br> REF=C 8517 ALT=T VEP=synonymous_variant gene-orf1ab:c.8517agC>agT',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 2,
+                'position': 17483,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/17747">Click here </a><br> REF=C 17483 ALT=T VEP=missense_variant gene-orf1ab:c.17483cCt>cTt',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 2,
+                'position': 17594,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/17858">Click here </a><br> REF=A 17594 ALT=G VEP=missense_variant gene-orf1ab:c.17594tAt>tGt',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 2,
+                'position': 17796,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/18060">Click here </a><br> REF=C 17796 ALT=T VEP=synonymous_variant gene-orf1ab:c.17796ctC>ctT',
+                'source': ' China NCB'
+            }, {
+                'sequenceIndex': 2,
+                'position': 251,
+                'note': ' SNP BetaCoV/USA/WA2/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/28144">Click here </a><br> REF=T 251 ALT=C VEP=missense_variant gene-ORF8:c.251tTa>tCa',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 3,
+                'position': 973,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/1238">Click here </a><br> REF=C 973 ALT=T VEP=missense_variant gene-orf1ab:c.973Cat>Tat',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 3,
+                'position': 3328,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/3593">Click here </a><br> REF=C 3328 ALT=T VEP=missense_variant gene-orf1ab:c.3328Ctt>Ttt',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 3,
+                'position': 4418,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/4683">Click here </a><br> REF=C 4418 ALT=T VEP=missense_variant gene-orf1ab:c.4418gCt>gTt',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 3,
+                'position': 4514,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/4779">Click here </a><br> REF=T 4514 ALT=C VEP=missense_variant gene-orf1ab:c.4514aTc>aCc',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 3,
+                'position': 8517,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/8782">Click here </a><br> REF=C 8517 ALT=T VEP=synonymous_variant gene-orf1ab:c.8517agC>agT',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 3,
+                'position': 17483,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/17747">Click here </a><br> REF=C 17483 ALT=T VEP=missense_variant gene-orf1ab:c.17483cCt>cTt ',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 3,
+                'position': 17594,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/17858">Click here </a><br> REF=A 17594 ALT=G VEP=missense_variant gene-orf1ab:c.17594tAt>tGt ',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 3,
+                'position': 17796,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/18060">Click here </a><br> REF=C 17796 ALT=T VEP=synonymous_variant gene-orf1ab:c.17796ctC>ctT',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 3,
+                'position': 251,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/28144">Click here </a><br> REF=T 251 ALT=C VEP=missense_variant gene-ORF8:c.251tTa>tCa',
+                'source': 'China NCB'
+            }, {
+                'sequenceIndex': 3,
+                'position': 651,
+                'note': ' SNP hCoV-19/USA/WA-UW172/2020 VariantID: <a target="_blank" href="https://bigd.big.ac.cn/ncov/variation/annotation/variant/28924">Click here </a><br> REF=T 651 ALT=C VEP=synonymous_variant gene-N:c.651gcT>gcC',
+                'source': 'China NCB'
+            },
+
+        ];
+        $.get("https://cdn.jsdelivr.net/gh/msabrowser/msabrowser@v1.0//examples/sample_files/SARSCoV2.txt", (fasta) => {
+
+            viewer = new MSABrowser({
+                id: "MSABrowserDemo",
+                msa: MSAProcessor({
+                    fasta: fasta,
+                    hasConsensus: true
+                }),
+                annotations: annotations,
+                alterations: alterations,
+                colorSchema: "nucleotide",
+            });
+
+            viewer.export("MSA_export.fasta");
+
+        });
+    </script>
+</body>
+
+</html>
