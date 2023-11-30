@@ -17,48 +17,86 @@
 
 <body>
 
-    <h1>Simulated FASTA with long sequences</h1>
+    <h1>MSA Visualizer</h1>
     <article>
-        In this case, we created a FASTA file with 75 sequences each have more than 75000 amino acids. This is to show the power of our visualization tool. 
+        This tool allows users to visualize protein sequence alignments and overlay custom annotations and graphical representations. 
+        To begin, select the FASTA file you would like to load, then click "Render Sequence".
     </article>
-    <input type="file" id="file-selector" accept=".txt">
-        <button id="annotationpop">Annotations</button>
-        <div id="myPopup" class="popup">
-            <div class="popup-content">
-                <p>Select Annotations Here:</p>
-                  <div class="dropdown-item">
-                    <input type="checkbox" id="labelcheck">
-                    <label for="labelcheck">Label Annotation</label>
-                    <input type="file" id="labelfile" accept=".txt">
-                  </div>
-                  <div class="dropdown-item">
-                    <input type="checkbox" id="linecheck">
-                    <label for="linecheck">Line Annotation</label>
-                    <input type="file" id="linefile" accept=".txt">
-                  </div>
-                </div>
+
+    <div id="toolbox">
+        <div class="tooltype">
+           
+            <label for="file-button">1. Import FASTA File:</label>
+            <div class="input_container">
+                <label for="file-selector" class="btn" id="file-button">Select File</label>
+                <input id="file-selector" style="display:none;" type="file" accept=".txt">
             </div>
+            <!-- <input type="file" id="file-selector" accept=".txt"> -->
         </div>
 
+        <div class="tooltype">
+            <label for="file-button">2. Generate Annotations:</label>
+        </div>
+                <div class="annotation-entry">
+                    <input type="text" id="annotation-name" placeholder="Annotation Name">
+                    <div class="input_container">
+                        <label for="annotation-file" class="btn" id="file-button">Annotation File</label>
+                        <input id="annotation-file" style="display:none;" type="file" accept=".txt">
+                    </div>
+                    <input type="checkbox" id="annotationcheck">
+                </div>
             
 
-      <label for="color-select">Color Scheme:</label>
-        <select name="colors" id="color-select">
-        <option value="hydrophobicity">Hydrophobicity</option>
-        <option value="buried">Buried</option>
-        <option value="cinema">Cinema</option>
-        <option value="clustal">Clustal</option>
-        <option value="clustal2">Clustal 2</option>
-        <option value="helix">Helix</option>
-        <option value="lesk">Lesk</option>
-        <option value="mae">Mae</option>
-        <option value="strand">Strand</option>
-        <option value="taylor">Taylor</option>
-        <option value="turn">Turn</option>
-        <option value="zappo">Zappo</option>
-        <option value="nucleotide">Nucleotide</option>
-        </select>
-      <button type="button" onclick=buildBrowser()>Render Sequence</button>
+
+
+
+
+            <!-- <button id="annotationpop">New Annotation</button>
+                <div id="myPopup" class="popup">
+                    <div class="popup-content">
+                        <p>Select Annotations Here:</p>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="labelcheck">
+                            <label for="labelcheck">Label Annotation</label>
+                            <input type="file" id="labelfile" accept=".txt">
+                        </div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="linecheck">
+                            <label for="linecheck">Line Annotation</label>
+                            <input type="file" id="linefile" accept=".txt">
+                        </div>
+                    </div>
+                </div> -->
+
+        
+        
+        <div class="tooltype">
+            <label for="color-select">3. Select Color Scheme:</label>
+                <select name="colors" id="color-select">
+                    <option value="hydrophobicity">Hydrophobicity</option>
+                    <option value="buried">Buried</option>
+                    <option value="cinema">Cinema</option>
+                    <option value="clustal">Clustal</option>
+                    <option value="clustal2">Clustal 2</option>
+                    <option value="helix">Helix</option>
+                    <option value="lesk">Lesk</option>
+                    <option value="mae">Mae</option>
+                    <option value="strand">Strand</option>
+                    <option value="taylor">Taylor</option>
+                    <option value="turn">Turn</option>
+                    <option value="zappo">Zappo</option>
+                    <option value="nucleotide">Nucleotide</option>
+                </select>
+        </div>
+
+        <div class="tooltype">
+            <button type="button" onclick=buildBrowser()>Render Sequence</button>
+        </div>
+
+    </div>
+            
+
+      
 
     
     <!-- MSABrowser Demo -->
@@ -113,6 +151,8 @@
         var linefile;
         let textarea = document.querySelector('textarea')
         let fileinput = document.getElementById('file-selector')
+        let annotationinput = document.getElementById('annotation-entry')
+
         let labelinput = document.getElementById('labelfile')
         let lineinput = document.getElementById('linefile')
 
@@ -138,6 +178,9 @@
 
         fileinput.addEventListener('change', () => {
             let files = fileinput.files;
+            const fileName = files[0]?.name;
+            const label = document.querySelector("label[for=file-selector]");
+            label.innerText = fileName ?? "Select File";
  
             if (files.length == 0) return;
             const file1 = files[0];
@@ -149,8 +192,11 @@
             };
             reader.readAsText(file1);
         });
-        labelinput.addEventListener('change', () => {
-            let files = labelinput.files;
+
+        let annotationfile = document.getElementById('annotation-file')
+
+            annotationfile.addEventListener('change', () => {
+            let files = annotationfile.files;
             if (files.length == 0) return;
             const file1 = files[0];
             let reader = new FileReader();
@@ -162,30 +208,49 @@
             };
             reader.readAsText(file1);
         });
-        lineinput.addEventListener('change', () => {
-            let files = labelinput.files;
-            if (files.length == 0) return;
-            const file1 = files[0];
-            let reader = new FileReader();
-            reader.onload = (e) => {
-            linefile = JSON.parse(e.target.result);
-        		//textarea.value = fasta;
-            console.log("read");
-            //viewer.export("MSA_export.fasta");
-            };
-            reader.readAsText(file1);
-        });
+
+
+        // labelinput.addEventListener('change', () => {
+        //     let files = labelinput.files;
+        //     if (files.length == 0) return;
+        //     const file1 = files[0];
+        //     let reader = new FileReader();
+        //     reader.onload = (e) => {
+        //     labelfile = JSON.parse(e.target.result);
+        // 		//textarea.value = fasta;
+        //     console.log("read");
+        //     //viewer.export("MSA_export.fasta");
+        //     };
+        //     reader.readAsText(file1);
+        // });
+
+
+        // lineinput.addEventListener('change', () => {
+        //     let files = labelinput.files;
+        //     if (files.length == 0) return;
+        //     const file1 = files[0];
+        //     let reader = new FileReader();
+        //     reader.onload = (e) => {
+        //     linefile = JSON.parse(e.target.result);
+        // 		//textarea.value = fasta;
+        //     console.log("read");
+        //     //viewer.export("MSA_export.fasta");
+        //     };
+        //     reader.readAsText(file1);
+        // });
 
         
         function addAnnotation(){
-            var label = document.getElementById("labelcheck");
-            var line = document.getElementById("linecheck");
-            if (label.checked == true){
+            var check = document.getElementById("annotationcheck");
+            // var line = document.getElementById("linecheck");
+            if (check.checked == true){
+            setName();
+            console.log(labelfile);
             annotations = annotations.concat(labelfile);
             } 
-            if (line.checked == true){
-            annotations = annotations.concat(linefile);
-            }
+            // if (line.checked == true){
+            // annotations = annotations.concat(linefile);
+            // }
         }
 
         function changeColor(){
@@ -193,16 +258,25 @@
             color = selector.value;
         }
 
-        annotationpop.addEventListener("click", function () {
-            console.log("hello");
-            myPopup.classList.add("show");
-        });
+        function setName(){
+            var name = document.getElementById('annotation-name').value;
+            console.log(name);
+
+            labelfile[0]["source"] = name;
+            //labelfile.setAttribute("source", name);
+        }
         
-        window.addEventListener("click", function (event) {
-            if (event.target == myPopup) {
-                myPopup.classList.remove("show");
-            }
-        });
+
+        // annotationpop.addEventListener("click", function () {
+        //     console.log("hello");
+        //     myPopup.classList.add("show");
+        // });
+        
+        // window.addEventListener("click", function (event) {
+        //     if (event.target == myPopup) {
+        //         myPopup.classList.remove("show");
+        //     }
+        // });
         /*
         function enableCheckbox() {
             var label = document.getElementById("labelcheck");
