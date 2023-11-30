@@ -2,7 +2,7 @@
   "name": "msabrowser",
   "version": "1.0.0",
   "description": "msabrowser-electron",
-  "main": "javascript/msabrowser.js",
+  "main": "javascript/main.js",
   "directories": {
     "example": "examples"
   },
